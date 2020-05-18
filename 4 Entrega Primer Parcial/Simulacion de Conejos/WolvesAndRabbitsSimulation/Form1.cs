@@ -137,9 +137,9 @@ namespace WolvesAndRabbitsSimulation
             }
         }
 
-        private void Form1_Click(object sender, EventArgs e)
-        {
-            Step();
-        }
+        //private void Form1_Click(object sender, EventArgs e)
+        //{
+        //    Step();
+        //}
     }
 }
