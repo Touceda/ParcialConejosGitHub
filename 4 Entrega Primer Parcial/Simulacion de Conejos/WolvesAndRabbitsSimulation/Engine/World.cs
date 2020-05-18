@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WolvesAndRabbitsSimulation.Simulation;
-
 
 namespace WolvesAndRabbitsSimulation.Engine
 {
@@ -18,83 +14,63 @@ namespace WolvesAndRabbitsSimulation.Engine
         private const int width = 255;
         private const int height = 255;
         private Size size = new Size(width, height);
+        private GameObject[] objects = new GameObject[0];
 
-        private Grass[,] grass = new Grass[255, 255];
-        private GameObject[] rabit = new GameObject[0];
-
-        public IEnumerable<GameObject> GameObjectsRabit
+        public IEnumerable<GameObject> GameObjects
         {
             get
             {
-                return rabit.ToArray();
+                return objects.ToArray();
             }
         }
 
         public int Width { get { return width; } }
         public int Height { get { return height; } }
 
-        public float Random()//random
+        public float Random()
         {
             return (float)rnd.NextDouble();
         }
 
-        public Point RandomPoint()//random
+        public Point RandomPoint()
         {
             return new Point(rnd.Next(width), rnd.Next(height));
         }
 
-        public int Random(int min, int max)//random
+        public int Random(int min, int max)
         {
             return rnd.Next(min, max);
         }
 
-
-
-        public void AddGrass(Grass obj, int x, int y)//Añado la grass
+        public void Add(GameObject obj)
         {
-            grass[x, y] = obj;
+            objects = objects.Concat(new GameObject[] { obj }).ToArray();
         }
 
-        public void AddRabit(GameObject obj)//añado conejo
+        public void Remove(GameObject obj)
         {
-            rabit = rabit.Concat(new GameObject[] { obj }).ToArray();
-        }   
-
-        public void Remove(GameObject obj)//elimino conejo
-        {
-            rabit = rabit.Where(o => o != obj).ToArray();
+            objects = objects.Where(o => o != obj).ToArray();
         }
-
 
         public virtual void Update()
         {
-            foreach (var obj in grass)//recorro el pasto y lo actualizo
+            foreach (GameObject obj in GameObjects)
             {
-                    obj.UpdateOn(this);
-            }
-
-            foreach (GameObject obj in GameObjectsRabit)//recorro los conejos y los actualizo
-            {
-                    obj.UpdateOn(this);
-                    obj.Position = PositiveMod(obj.Position, size);
+                obj.UpdateOn(this);
+                obj.Position = PositiveMod(obj.Position, size);
             }
         }
 
         public virtual void DrawOn(Graphics graphics)
-        {    
-            foreach (GameObject obj in grass)//dibujo el pasto
-            {                    
-                    graphics.FillRectangle(new Pen(obj.Color) .Brush, obj.Bounds);             
-            }
-
-            foreach (var obj in GameObjectsRabit)//Dibujo Conejos
+        {
+            foreach (GameObject obj in GameObjects)
             {
                 graphics.FillRectangle(new Pen(obj.Color).Brush, obj.Bounds);
             }
         }
 
         // http://stackoverflow.com/a/10065670/4357302
-        private static int PositiveMod(int a, int n)//calculo para que el conejo no salga de pantalla
+        private static int PositiveMod(int a, int n)
         {
             int result = a % n;
             if ((a < 0 && n > 0) || (a > 0 && n < 0))
@@ -111,45 +87,16 @@ namespace WolvesAndRabbitsSimulation.Engine
             return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
 
-        public Grass ObjectsAt(Point pos)
+        public IEnumerable<GameObject> ObjectsAt(Point pos)
         {
-            //divido la posicion en 3 ya que el mundo esta escalado en 3
-            float x = pos.X / 3;
-            float y = pos.Y / 3;
-            //lo vuelvo a dividir en 2 para saber en que parte de la matriz accedo, para saber que pasto me comi
-            //x = x / 2;
-            //y = y / 2;
-            //Por ultimo Redondeo el resultado para buscar la Grass que estoy pisando en la matriz
-            int pointX = (int)Math.Round(x);
-            int pointY = (int)Math.Round(y);    
-
-            return grass[pointX, pointY];
-
-            //if (MIX % 2 != 0)
-            //{
-            //    MIX++;
-            //}
-
-            //if (MIY % 2 != 0)
-            //{
-            //    MIY++;
-            //}
-
-
-            
-            //Grass grass = null;
-            //grass = Grass[pos.X, pos.Y];
-            //return grass;
-
-            //return GameObjects.Where(each =>
-            //{
-            //    Rectangle bounds = each.Bounds;
-            //    PointF center = new PointF((bounds.Left + bounds.Right - 1) / 2.0f,
-            //                               (bounds.Top + bounds.Bottom - 1) / 2.0f);
-            //    return Dist(pos, center) <= bounds.Width / 2.0f
-            //        && Dist(pos, center) <= bounds.Height / 2.0f;
-            //});
-
+            return GameObjects.Where(each =>
+            {
+                Rectangle bounds = each.Bounds;
+                PointF center = new PointF((bounds.Left + bounds.Right - 1) / 2.0f,
+                                           (bounds.Top + bounds.Bottom - 1) / 2.0f);
+                return Dist(pos, center) <= bounds.Width / 2.0f
+                    && Dist(pos, center) <= bounds.Height / 2.0f;
+            });
         }
     }
 }

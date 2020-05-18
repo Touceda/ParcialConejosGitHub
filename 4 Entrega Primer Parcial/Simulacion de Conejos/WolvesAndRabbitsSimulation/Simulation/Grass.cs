@@ -15,7 +15,7 @@ namespace WolvesAndRabbitsSimulation.Simulation
         private int growth;
         private int ticks = 0;
         
-        public int Growth// la vida del grass y su color, dependiendo de la vida
+        public int Growth
         {
             get { return growth; }
             set
@@ -27,12 +27,12 @@ namespace WolvesAndRabbitsSimulation.Simulation
             }
         }
 
-        public override Rectangle Bounds // Position y tamaño de la grass
+        public override Rectangle Bounds
         {
             get { return new Rectangle(Position, new Size(PATCH_SIZE, PATCH_SIZE)); }
         }
 
-        public override void UpdateOn(World world)//se actualiza el pasto cada 10 ticks, antes no
+        public override void UpdateOn(World world)
         {
             if (++ticks > 10)
             {

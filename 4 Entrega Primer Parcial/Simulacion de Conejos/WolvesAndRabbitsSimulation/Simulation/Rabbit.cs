@@ -10,23 +10,23 @@ namespace WolvesAndRabbitsSimulation.Simulation
 {
     class Rabbit : GameObject
     {
-        private int DEATH_AGE = 1500; //Año De Muerte
-        private int ADULTHOOD = 100; // Es Adulto
-        private int FOOD_TO_BREED = 100; //Comida para tener un Hijo
-        private int FOOD_CONSUMPTION = 25; // Comida Consumida
-        private int MAX_CHILDREN = 30; // Max Hijos
-        private double BREED_PROBABILITY = 0.3; //Probabilidad de tener hijos
-        private double DEATH_PROBABILITY = 0.5; //Probabilidad de morir 
+        private int DEATH_AGE = 1500;
+        private int ADULTHOOD = 100;
+        private int FOOD_TO_BREED = 100;
+        private int FOOD_CONSUMPTION = 25;
+        private int MAX_CHILDREN = 30;
+        private double BREED_PROBABILITY = 0.3;
+        private double DEATH_PROBABILITY = 0.5;
 
-        private int age = 0;// Edad
-        private int food = 500; //Comida
+        private int age = 0;
+        private int food = 500;
 
         public Rabbit()
         {
             Color = Color.White;
         }
 
-        public override void UpdateOn(World forest)// Se actualiza el estado del conejo
+        public override void UpdateOn(World forest)
         {
             EatSomeGrass(forest);
             Breed(forest);
@@ -35,50 +35,48 @@ namespace WolvesAndRabbitsSimulation.Simulation
             Wander(forest);
         }
 
-        private void EatSomeGrass(World forest)//Come Grass
+        private void EatSomeGrass(World forest)
         {
-
-            Grass grass = forest.ObjectsAt(Position);
-            //Grass grass = forest.ObjectsAt(Position).Select(o => o as Grass).First(o => o != null);//creo una copia de la grass que va a comer
-            int amount = FOOD_CONSUMPTION * 2;//lo que llena la barra de comida
+            Grass grass = forest.ObjectsAt(Position).Select(o => o as Grass).First(o => o != null);
+            int amount = FOOD_CONSUMPTION * 2;
             if (grass.Growth < amount)
             {
                 amount = grass.Growth;
             }
-            grass.Growth -= amount;//esta linea no hace falta
+            grass.Growth -= amount;
             food += amount;
         }
 
-        private void Breed(World forest)//Tiene Hijos 
+        private void Breed(World forest)
         {
-            //if (age < ADULTHOOD || food < FOOD_TO_BREED) return;
-            //if (forest.ObjectsAt(Position).Any(o => o is Rabbit && o != this))
-            //{
-            //    for (int i = 0; i < MAX_CHILDREN; i++)
-            //    {
-            //        if (forest.Random(1, 10) <= 10 * BREED_PROBABILITY)
-            //        {
-            //            Rabbit bunny = new Rabbit();
-            //            bunny.Position = Position;
-            //            forest.Add(bunny);
-            //        }
-            //    }
-            //}
+            if (age < ADULTHOOD || food < FOOD_TO_BREED) return;
+            if (forest.ObjectsAt(Position).Any(o => o is Rabbit && o != this))
+            {
+                for (int i = 0; i < MAX_CHILDREN; i++)
+                {
+                    if (forest.Random(1, 10) <= 10 * BREED_PROBABILITY)
+                    {
+                        Rabbit bunny = new Rabbit();
+                        bunny.Position = Position;
+                        forest.Add(bunny);
+                    }
+                }
+            }
         }
 
-        private void GrowOld(World forest)// Mira la edad y muere
+        private void GrowOld(World forest)
         {
             age++;
             if (age >= DEATH_AGE) { Die(forest); }
         }
 
-        private void ConsumeFood(World forest) //Consume comida
+        private void ConsumeFood(World forest)
         {
             food -= FOOD_CONSUMPTION;
             if (food <= 0) { Die(forest); }
         }
 
-        private void Die(World forest) // Probabilidad de morir
+        private void Die(World forest)
         {
             if (forest.Random(1, 10) <= 10 * DEATH_PROBABILITY)
             {
@@ -86,7 +84,7 @@ namespace WolvesAndRabbitsSimulation.Simulation
             }
         }
 
-        private void Wander(World forest) //Actualiza position 
+        private void Wander(World forest)
         {
             Forward(forest.Random(1, 5));
             Turn(forest.Random(-100, 100));
