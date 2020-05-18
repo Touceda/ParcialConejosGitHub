@@ -77,12 +77,12 @@ namespace WolvesAndRabbitsSimulation
             RegisterFrameTime(end - begin);
 
             Text = string.Format("Frames: {3}, Objects: {0}, Average FPS: {1:00}, Current FPS: {2:00}",
-                world.GameObjectsRabit.Count(),
+                world.GameObjectsRabbit.Count(),
                 1000.0 / (frameTime / frameCount),
                 1000.0 / (end - begin),
                 frameCount);
 
-            File.AppendAllText(fileName, string.Format("{0}\n", world.GameObjectsRabit.Where(o => o is Rabbit).Count()));
+            File.AppendAllText(fileName, string.Format("{0}\n", world.GameObjectsRabbit.Where(o => o is Rabbit).Count()));
         }
 
         private void RegisterFrameTime(long time)
@@ -93,7 +93,7 @@ namespace WolvesAndRabbitsSimulation
 
         private void lifeSpawner_Tick(object sender, EventArgs e)
         {
-            if (world.GameObjectsRabit.Where(o => o is Rabbit).Count() == 0)
+            if (world.GameObjectsRabbit.Where(o => o is Rabbit).Count() == 0)
             {
                 SpawnSomeRabbits();
             }

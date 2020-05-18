@@ -20,13 +20,13 @@ namespace WolvesAndRabbitsSimulation.Engine
         private Size size = new Size(width, height);
 
         private Grass[,] grass = new Grass[128, 128];
-        private GameObject[] rabit = new GameObject[0];
+        private List<Rabbit> rabbit = new List<Rabbit>();
 
-        public IEnumerable<GameObject> GameObjectsRabit
+        public IEnumerable<GameObject> GameObjectsRabbit// para acceder de otros lugares
         {
             get
             {
-                return rabit.ToArray();
+                return rabbit.ToArray();
             }
         }
 
@@ -55,14 +55,14 @@ namespace WolvesAndRabbitsSimulation.Engine
             grass[x, y] = obj;
         }
 
-        public void AddRabit(GameObject obj)//añado conejo
+        public void AddRabit(Rabbit obj)//añado conejo
         {
-            rabit = rabit.Concat(new GameObject[] { obj }).ToArray();
+            rabbit.Add(obj);
         }   
 
-        public void Remove(GameObject obj)//elimino conejo
+        public void Remove(Rabbit obj)//elimino conejo
         {
-            rabit = rabit.Where(o => o != obj).ToArray();
+            rabbit.Remove(obj);
         }
 
 
@@ -73,11 +73,11 @@ namespace WolvesAndRabbitsSimulation.Engine
                     obj.UpdateOn(this);
             }
 
-            foreach (GameObject obj in GameObjectsRabit)//recorro los conejos y los actualizo
+            for (int i = 0; i < rabbit.Count; i++)
             {
-                    obj.UpdateOn(this);
-                    obj.Position = PositiveMod(obj.Position, size);
-            }
+                rabbit[i].UpdateOn(this);
+                rabbit[i].Position = PositiveMod(rabbit[i].Position, size);
+            }                                      
         }
 
         public virtual void DrawOn(Graphics graphics)
@@ -87,7 +87,7 @@ namespace WolvesAndRabbitsSimulation.Engine
                     graphics.FillRectangle(new Pen(obj.Color) .Brush, obj.Bounds);             
             }
 
-            foreach (var obj in GameObjectsRabit)//Dibujo Conejos
+            foreach (var obj in rabbit)//Dibujo Conejos
             {
                 graphics.FillRectangle(new Pen(obj.Color).Brush, obj.Bounds);
             }
@@ -105,12 +105,6 @@ namespace WolvesAndRabbitsSimulation.Engine
         {
             return new Point(PositiveMod(p.X, s.Width), PositiveMod(p.Y, s.Height));
         }
-
-        //public double Dist(PointF a, PointF b)
-        //{
-        //    return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
-        //}
-
         public Grass ObjectsAt(Point pos)
         {
             //divido la posicion del conejo en 2 para ubicarlo en la matriz de glass, para saber que grass estoy pisando
@@ -122,31 +116,6 @@ namespace WolvesAndRabbitsSimulation.Engine
             int pointY = (int)Math.Round(y);    
 
             return grass[pointX, pointY];//obtengo la grass que estoy pisando
-
-            //if (MIX % 2 != 0)
-            //{
-            //    MIX++;
-            //}
-
-            //if (MIY % 2 != 0)
-            //{
-            //    MIY++;
-            //}
-
-
-            
-            //Grass grass = null;
-            //grass = Grass[pos.X, pos.Y];
-            //return grass;
-
-            //return GameObjects.Where(each =>
-            //{
-            //    Rectangle bounds = each.Bounds;
-            //    PointF center = new PointF((bounds.Left + bounds.Right - 1) / 2.0f,
-            //                               (bounds.Top + bounds.Bottom - 1) / 2.0f);
-            //    return Dist(pos, center) <= bounds.Width / 2.0f
-            //        && Dist(pos, center) <= bounds.Height / 2.0f;
-            //});
 
         }
     }
