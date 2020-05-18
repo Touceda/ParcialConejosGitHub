@@ -45,25 +45,24 @@ namespace WolvesAndRabbitsSimulation.Simulation
             {
                 amount = grass.Growth;
             }
-            grass.Growth -= amount;//esta linea no hace falta
+            grass.Growth -= amount;
             food += amount;
         }
 
         private void Breed(World forest)//Tiene Hijos 
         {
-            //if (age < ADULTHOOD || food < FOOD_TO_BREED) return;
-            //if (forest.ObjectsAt(Position).Any(o => o is Rabbit && o != this))
-            //{
-            //    for (int i = 0; i < MAX_CHILDREN; i++)
-            //    {
-            //        if (forest.Random(1, 10) <= 10 * BREED_PROBABILITY)
-            //        {
-            //            Rabbit bunny = new Rabbit();
-            //            bunny.Position = Position;
-            //            forest.Add(bunny);
-            //        }
-            //    }
-            //}
+            if (age < ADULTHOOD || food < FOOD_TO_BREED) return;
+            //if (forest.ObjectsAt(Position).Any(o => o is Rabbit && o != this))//no hace falta
+                for (int i = 0; i < MAX_CHILDREN; i++)
+                {
+                    if (forest.Random(1, 10) <= 10 * BREED_PROBABILITY)
+                    {
+                        Rabbit bunny = new Rabbit();
+                        bunny.Position = Position;
+                        forest.AddRabit(bunny);
+                    }
+                }
+            
         }
 
         private void GrowOld(World forest)// Mira la edad y muere

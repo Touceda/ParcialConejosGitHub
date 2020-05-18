@@ -101,19 +101,19 @@ namespace WolvesAndRabbitsSimulation
 
         private void FillWithGrass()
         {
-            int xx = -1;
-            int yy = -1;
+            int countX = -1;
+            int countY = -1;
             for (int x = 0; x < world.Width; x += Grass.PATCH_SIZE)
             {
-                xx++;
-                yy = -1;
+                countX++;
+                countY = -1;
                 for (int y = 0; y < world.Height; y += Grass.PATCH_SIZE)
                 {
-                    yy++;
+                    countY++;
                     Grass grass = new Grass();
                     grass.Position = new Point(x, y);
                     grass.Growth = world.Random(0, 50);
-                    world.AddGrass(grass,x,y);
+                    world.AddGrass(grass,countX,countY);
                 }
             }
         }

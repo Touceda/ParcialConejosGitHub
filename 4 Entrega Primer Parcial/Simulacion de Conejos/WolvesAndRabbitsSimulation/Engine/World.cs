@@ -19,7 +19,7 @@ namespace WolvesAndRabbitsSimulation.Engine
         private const int height = 255;
         private Size size = new Size(width, height);
 
-        private Grass[,] grass = new Grass[255, 255];
+        private Grass[,] grass = new Grass[128, 128];
         private GameObject[] rabit = new GameObject[0];
 
         public IEnumerable<GameObject> GameObjectsRabit
@@ -106,24 +106,22 @@ namespace WolvesAndRabbitsSimulation.Engine
             return new Point(PositiveMod(p.X, s.Width), PositiveMod(p.Y, s.Height));
         }
 
-        public double Dist(PointF a, PointF b)
-        {
-            return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
-        }
+        //public double Dist(PointF a, PointF b)
+        //{
+        //    return Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
+        //}
 
         public Grass ObjectsAt(Point pos)
         {
-            //divido la posicion en 3 ya que el mundo esta escalado en 3
-            float x = pos.X / 3;
-            float y = pos.Y / 3;
-            //lo vuelvo a dividir en 2 para saber en que parte de la matriz accedo, para saber que pasto me comi
-            //x = x / 2;
-            //y = y / 2;
+            //divido la posicion del conejo en 2 para ubicarlo en la matriz de glass, para saber que grass estoy pisando
+            float x = pos.X / 2;
+            float y = pos.Y / 2;
+
             //Por ultimo Redondeo el resultado para buscar la Grass que estoy pisando en la matriz
             int pointX = (int)Math.Round(x);
             int pointY = (int)Math.Round(y);    
 
-            return grass[pointX, pointY];
+            return grass[pointX, pointY];//obtengo la grass que estoy pisando
 
             //if (MIX % 2 != 0)
             //{
