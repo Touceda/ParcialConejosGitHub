@@ -68,20 +68,21 @@ namespace WolvesAndRabbitsSimulation
 
         private void Step()
         {
-            ClientSize = new Size(world.Width * scale, world.Height * scale);
+            
+            ClientSize = new Size(world.Width * scale, world.Height * scale);//tamaño de 765x765
             long begin = stopwatch.ElapsedMilliseconds;
             world.Update();
-            Refresh();
+            Refresh();//refresca la pantalla y vuelve a dibujar
             long end = stopwatch.ElapsedMilliseconds;
             RegisterFrameTime(end - begin);
 
             Text = string.Format("Frames: {3}, Objects: {0}, Average FPS: {1:00}, Current FPS: {2:00}",
-                world.GameObjects.Count(),
+                world.GameObjectsRabit.Count(),
                 1000.0 / (frameTime / frameCount),
                 1000.0 / (end - begin),
                 frameCount);
 
-            File.AppendAllText(fileName, string.Format("{0}\n", world.GameObjects.Where(o => o is Rabbit).Count()));
+            File.AppendAllText(fileName, string.Format("{0}\n", world.GameObjectsRabit.Where(o => o is Rabbit).Count()));
         }
 
         private void RegisterFrameTime(long time)
@@ -92,7 +93,7 @@ namespace WolvesAndRabbitsSimulation
 
         private void lifeSpawner_Tick(object sender, EventArgs e)
         {
-            if (world.GameObjects.Where(o => o is Rabbit).Count() == 0)
+            if (world.GameObjectsRabit.Where(o => o is Rabbit).Count() == 0)
             {
                 SpawnSomeRabbits();
             }
@@ -100,14 +101,19 @@ namespace WolvesAndRabbitsSimulation
 
         private void FillWithGrass()
         {
+            int xx = -1;
+            int yy = -1;
             for (int x = 0; x < world.Width; x += Grass.PATCH_SIZE)
             {
+                xx++;
+                yy = -1;
                 for (int y = 0; y < world.Height; y += Grass.PATCH_SIZE)
                 {
+                    yy++;
                     Grass grass = new Grass();
                     grass.Position = new Point(x, y);
                     grass.Growth = world.Random(0, 50);
-                    world.Add(grass);
+                    world.AddGrass(grass,x,y);
                 }
             }
         }
@@ -127,7 +133,7 @@ namespace WolvesAndRabbitsSimulation
                 {
                     rabbit.Position = new Point(rabbit.Position.X, 0);
                 }
-                world.Add(rabbit);
+                world.AddRabit(rabbit);
             }
         }
 
