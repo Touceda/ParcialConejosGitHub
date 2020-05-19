@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -48,8 +50,6 @@ namespace WolvesAndRabbitsSimulation.Engine
             return rnd.Next(min, max);
         }
 
-
-
         public void AddGrass(Grass obj, int x, int y)//Añado la grass
         {
             grass[x, y] = obj;
@@ -80,17 +80,32 @@ namespace WolvesAndRabbitsSimulation.Engine
             }                                      
         }
 
-        public virtual void DrawOn(Graphics graphics)
-        {    
-            foreach (GameObject obj in grass)//dibujo el pasto
-            {                    
-                    graphics.FillRectangle(new Pen(obj.Color) .Brush, obj.Bounds);             
-            }
-
-            foreach (var obj in rabbit)//Dibujo Conejos
+        Pen [] MisImagenes = new Pen[256];//Creo un vector donde voy a guardar los 254 colores segun el estados del Grass(Segun el Growth) y el 255 es el color del  rabit
+        public void SavePens()
+        {          
+            Color color;
+            for (int i = 0; i < 255; i++)
             {
-                graphics.FillRectangle(new Pen(obj.Color).Brush, obj.Bounds);
+                color = Color.FromArgb(i, 0, 255, 0);           
+                MisImagenes[i] = new Pen(color);//Guardo los colores de la Grass      
             }
+            color = Color.White;
+            MisImagenes[255] = new Pen(color);//GUARDO EL Color de los conejos
+        }
+
+        public virtual void DrawOn(Graphics graphics)
+        {           
+            foreach (Grass obj in grass)//dibujo el pasto
+            {                           
+                graphics.FillRectangle(MisImagenes[obj.Growth].Brush, obj.Bounds);             
+            }
+            
+
+            foreach (Rabbit obj in rabbit)//Dibujo Conejos
+            {
+                graphics.FillRectangle(MisImagenes[255].Brush, obj.Bounds);                
+            }
+ 
         }
 
         // http://stackoverflow.com/a/10065670/4357302

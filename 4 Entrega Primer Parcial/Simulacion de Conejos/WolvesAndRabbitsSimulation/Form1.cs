@@ -51,13 +51,15 @@ namespace WolvesAndRabbitsSimulation
 
         private void InitializeWorld()
         {
+            world.SavePens();//guardo los colores
             FillWithGrass();
             SpawnSomeRabbits();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.ScaleTransform(scale, scale);
+            e.Graphics.Clear(Color.Brown);
+            e.Graphics.ScaleTransform(scale, scale);          
             world.DrawOn(e.Graphics);
         }
                 
@@ -67,8 +69,7 @@ namespace WolvesAndRabbitsSimulation
         }
 
         private void Step()
-        {
-            
+        {   
             ClientSize = new Size(world.Width * scale, world.Height * scale);//tamaño de 765x765
             long begin = stopwatch.ElapsedMilliseconds;
             world.Update();
