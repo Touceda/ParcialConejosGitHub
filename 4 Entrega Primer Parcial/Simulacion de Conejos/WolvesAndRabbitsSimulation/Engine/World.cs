@@ -72,8 +72,8 @@ namespace WolvesAndRabbitsSimulation.Engine
             {
                     obj.UpdateOn(this);
             }
-
-            for (int i = 0; i < rabbit.Count; i++)
+            var r = rabbit;
+            for (int i = 0; i < r.Count; i++)
             {
                 rabbit[i].UpdateOn(this);
                 rabbit[i].Position = PositiveMod(rabbit[i].Position, size);
@@ -125,6 +125,8 @@ namespace WolvesAndRabbitsSimulation.Engine
             //divido la posicion del conejo en 2 para ubicarlo en la matriz de glass, para saber que grass estoy pisando
             float x = pos.X / 2;
             float y = pos.Y / 2;
+
+  
 
             //Por ultimo Redondeo el resultado para buscar la Grass que estoy pisando en la matriz
             int pointX = (int)Math.Round(x);
