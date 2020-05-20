@@ -76,7 +76,10 @@ namespace WolvesAndRabbitsSimulation.Engine
             for (int i = 0; i < r.Count; i++)
             {
                 rabbit[i].UpdateOn(this);
-                rabbit[i].Position = PositiveMod(rabbit[i].Position, size);
+                if (rabbit[i]!=null)
+                {
+                    rabbit[i].Position = PositiveMod(rabbit[i].Position, size);
+                }              
             }                                      
         }
 
